@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Журнал аудита{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-journal-text"></i> Журнал аудита</h2>
+</div>
+
+<!-- Filters -->
+<div class="filter-section">
+    <form method="get" class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Пользователь</label>
+            <select name="user" class="form-select">
+                <option value="">Все пользователи</option>
+                {% for u in users %}
+                <option value="{{ u.pk }}" {% if selected_user == u.pk|stringformat:"i" %}selected{% endif %}>
+                    {{ u.full_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label">Действие</label>
+            <select name="action" class="form-select">
+                <option value="">Все действия</option>
+                <option value="CREATE" {% if selected_action == 'CREATE' %}selected{% endif %}>Создание</option>
+                <option value="UPDATE" {% if selected_action == 'UPDATE' %}selected{% endif %}>Обновление</option>
+                <option value="DELETE" {% if selected_action == 'DELETE' %}selected{% endif %}>Удаление</option>
+            </select>
+        </div>
+        
+        <div class="col-md-2">
+            <label class="form-label">С даты</label>
+            <input type="date" name="date_from" class="form-control" value="{{ date_from }}">
+        </div>
+        
+        <div class="col-md-2">
+            <label class="form-label">По дату</label>
+            <input type="date" name="date_to" class="form-control" value="{{ date_to }}">
+        </div>
+        
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i> Фильтровать
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Audit Log Table -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Дата и время</th>
+                        <th>Пользователь</th>
+                        <th>Действие</th>
+                        <th>Таблица</th>
+                        <th>ID записи</th>
+                        <th>IP адрес</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.created_at|date:"d.m.Y H:i:s" }}</td>
+                        <td>
+                            {% if log.user %}
+                                {{ log.user.full_name }}
+                            {% else %}
+                                <span class="text-muted">Аноним</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.action == 'CREATE' %}
+                                <span class="badge bg-success">Создание</span>
+                            {% elif log.action == 'UPDATE' %}
+                                <span class="badge bg-warning">Обновление</span>
+                            {% elif log.action == 'DELETE' %}
+                                <span class="badge bg-danger">Удаление</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ log.action }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.table_name %}
+                                {{ log.table_name }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.record_id %}
+                                {{ log.record_id }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.ip_address %}
+                                {{ log.ip_address }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                            <p class="mt-2 mb-0">Нет записей</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

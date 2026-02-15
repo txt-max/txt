@@ -1,0 +1,9 @@
+Тип БД: PostgreSQL
+Имя БД: postgres
+Пользователь: postgres
+Пароль: DXRJE@GQD6YQ
+Хост: localhost
+Порт: 5432
+
+Строка подключения:
+postgresql://postgres:admin123@localhost:5432/course_db

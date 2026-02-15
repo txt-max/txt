@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2><i class="bi bi-book-fill"></i> {{ course.title }}</h2>
+        <p class="text-muted mb-0">Преподаватель: {{ course.teacher.full_name }}</p>
+    </div>
+    <a href="{% url 'app:courses_list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Назад к списку
+    </a>
+</div>
+
+<!-- Course Statistics -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Записано студентов</h6>
+                <h3 class="mb-0">{{ enrolled_count }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Завершили курс</h6>
+                <h3 class="mb-0">{{ completed_count }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Средний балл</h6>
+                <h3 class="mb-0">{{ avg_score }}%</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Info -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-info-circle"></i> Информация о курсе
+    </div>
+    <div class="card-body">
+        {% if course.description %}
+            <p>{{ course.description }}</p>
+        {% else %}
+            <p class="text-muted">Описание отсутствует</p>
+        {% endif %}
+        
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <strong>Статус:</strong>
+                {% if course.status == 'published' %}
+                    <span class="badge bg-success">Опубликован</span>
+                {% elif course.status == 'draft' %}
+                    <span class="badge bg-secondary">Черновик</span>
+                {% else %}
+                    <span class="badge bg-dark">Архивирован</span>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <strong>Дата начала:</strong>
+                {% if course.start_date %}
+                    {{ course.start_date|date:"d.m.Y" }}
+                {% else %}
+                    <span class="text-muted">Не указана</span>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <strong>Дата окончания:</strong>
+                {% if course.end_date %}
+                    {{ course.end_date|date:"d.m.Y" }}
+                {% else %}
+                    <span class="text-muted">Не указана</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modules -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-list-ul"></i> Модули курса
+    </div>
+    <div class="card-body p-0">
+        {% if modules %}
+            <div class="list-group list-group-flush">
+                {% for module in modules %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">{{ module.order_num }}. {{ module.title }}</h6>
+                            {% if module.description %}
+                                <small class="text-muted">{{ module.description|truncatewords:15 }}</small>
+                            {% endif %}
+                        </div>
+                        <span class="badge bg-info">{{ module.lessons.count }} уроков</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-4 text-muted">
+                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                <p class="mt-2 mb-0">Нет модулей</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

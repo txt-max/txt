@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}Панель управления{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Statistics Cards -->
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body">
+                <i class="bi bi-people card-icon"></i>
+                <div class="stat-number">{{ total_users }}</div>
+                <div class="stat-label">Всего пользователей</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body">
+                <i class="bi bi-mortarboard card-icon"></i>
+                <div class="stat-number">{{ total_students }}</div>
+                <div class="stat-label">Студентов</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+            <div class="card-body">
+                <i class="bi bi-person-video3 card-icon"></i>
+                <div class="stat-number">{{ total_teachers }}</div>
+                <div class="stat-label">Преподавателей</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white">
+            <div class="card-body">
+                <i class="bi bi-book card-icon"></i>
+                <div class="stat-number">{{ total_courses }}</div>
+                <div class="stat-label">Курсов всего</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-secondary text-white">
+            <div class="card-body">
+                <i class="bi bi-play-circle card-icon"></i>
+                <div class="stat-number">{{ active_courses }}</div>
+                <div class="stat-label">Активных курсов</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-danger text-white">
+            <div class="card-body">
+                <i class="bi bi-person-check card-icon"></i>
+                <div class="stat-number">{{ total_enrollments }}</div>
+                <div class="stat-label">Активных записей</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card bg-dark text-white">
+            <div class="card-body">
+                <i class="bi bi-graph-up card-icon"></i>
+                <div class="stat-number">{{ avg_score }}%</div>
+                <div class="stat-label">Средний балл</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Enrollments -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-clock-history"></i> Последние записи на курсы
+            </div>
+            <div class="card-body p-0">
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Студент</th>
+                                <th>Курс</th>
+                                <th>Дата</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in recent_enrollments %}
+                            <tr>
+                                <td>{{ enrollment.student.full_name }}</td>
+                                <td>{{ enrollment.course.title }}</td>
+                                <td>{{ enrollment.enrolled_at|date:"d.m.Y H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Нет данных</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popular Courses -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-trophy"></i> Популярные курсы
+            </div>
+            <div class="card-body p-0">
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Курс</th>
+                                <th>Преподаватель</th>
+                                <th>Студентов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in popular_courses %}
+                            <tr>
+                                <td>{{ course.title }}</td>
+                                <td>{{ course.teacher.full_name }}</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ course.student_count }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Нет данных</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

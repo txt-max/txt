@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Отчёты{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2><i class="bi bi-file-earmark-bar-graph"></i> Отчёты</h2>
+</div>
+
+<!-- Course Statistics -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-book"></i> Статистика по курсам
+    </div>
+    <div class="card-body p-0">
+        <div style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Курс</th>
+                        <th>Преподаватель</th>
+                        <th>Активно</th>
+                        <th>Завершено</th>
+                        <th>Средний балл</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in course_stats %}
+                    <tr>
+                        <td><strong>{{ course.title }}</strong></td>
+                        <td>{{ course.teacher.full_name }}</td>
+                        <td><span class="badge bg-primary">{{ course.total_enrolled }}</span></td>
+                        <td><span class="badge bg-success">{{ course.completed }}</span></td>
+                        <td>
+                            {% if course.avg_score %}
+                                {{ course.avg_score|floatformat:2 }}%
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- User Statistics -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-people"></i> Статистика по студентам
+    </div>
+    <div class="card-body p-0">
+        <div style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Студент</th>
+                        <th>Email</th>
+                        <th>Активных курсов</th>
+                        <th>Завершено</th>
+                        <th>Средний балл</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in user_stats %}
+                    <tr>
+                        <td><strong>{{ user.full_name }}</strong></td>
+                        <td>{{ user.email }}</td>
+                        <td><span class="badge bg-primary">{{ user.courses_count }}</span></td>
+                        <td><span class="badge bg-success">{{ user.completed_courses }}</span></td>
+                        <td>
+                            {% if user.avg_score %}
+                                {{ user.avg_score|floatformat:2 }}%
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

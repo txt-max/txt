@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Редактировать пользователя{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person-gear"></i> Редактировать пользователя</h2>
+    <a href="{% url 'app:users_list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Назад к списку
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row g-3">
+                <!-- Email -->
+                <div class="col-md-6">
+                    {{ form.email|as_crispy_field }}
+                </div>
+
+                <!-- Full Name -->
+                <div class="col-md-6">
+                    {{ form.full_name|as_crispy_field }}
+                </div>
+
+                <!-- Phone -->
+                <div class="col-md-6">
+                    {{ form.phone|as_crispy_field }}
+                </div>
+
+                <!-- Role -->
+                <div class="col-md-6">
+                    {{ form.role|as_crispy_field }}
+                </div>
+
+                <!-- Active -->
+                <div class="col-12">
+                    <div class="form-check">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            Активен
+                        </label>
+                    </div>
+                </div>
+
+                <!-- New Password -->
+                <div class="col-md-6">
+                    {{ form.new_password}}
+                </div>
+
+                <!-- Confirm New Password -->
+                <div class="col-md-6">
+                    {{ form.confirm_password }}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Сохранить изменения
+                </button>
+                <a href="{% url 'app:users_list' %}" class="btn btn-secondary ms-2">
+                    Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
